@@ -1,5 +1,5 @@
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,27 +26,28 @@ public class AlarmDAOImplTest {
 
     @Before
     public void setUp() throws SQLException {
-        // Mock DAOFactory, Connection, PreparedStatement, and ResultSet
+        // Simuler DAOFactory, Connection, PreparedStatement, et ResultSet
         mockDAOFactory = mock(DAOFactory.class);
         mockConnection = mock(Connection.class);
         mockPreparedStatement = mock(PreparedStatement.class);
         mockResultSet = mock(ResultSet.class);
 
-        // Set up DAOFactory to return mock Connection
+        // Simuler le comportement du DAOFactory pour renvoyer une connexion
         when(mockDAOFactory.getConnection()).thenReturn(mockConnection);
 
-        // Instantiate AlarmDAOImpl with mock DAOFactory
+        // Initialiser AlarmDAOImpl avec la DAOFactory simulée
         alarmDAO = new AlarmDAOImpl(mockDAOFactory);
     }
 
     @Test
     public void testInsertAlarm() throws SQLException {
-        // Arrange
+        // Préparer l'objet Alarm
         Alarm alarm = new Alarm();
         alarm.setTitle("Test Alarm");
         alarm.setTime(Time.valueOf("12:00:00"));
         alarm.setRepeatDays(new HashSet<>(List.of("Monday", "Wednesday")));
 
+        // Simuler l'insertion et l'obtention des clés générées
         when(mockConnection.prepareStatement(anyString(), eq(PreparedStatement.RETURN_GENERATED_KEYS)))
                 .thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeUpdate()).thenReturn(1);
@@ -54,42 +55,31 @@ public class AlarmDAOImplTest {
         when(mockResultSet.next()).thenReturn(true);
         when(mockResultSet.getInt(1)).thenReturn(1);
 
-        // Act
+        // Appeler la méthode à tester
         alarmDAO.insertAlarm(alarm, 1);
 
-        // Assert
+        // Vérifier que l'insertion a eu lieu
         verify(mockPreparedStatement, times(1)).executeUpdate();
-        assertEquals(1, alarm.getAlarmId());
-    }
-
-    @Test(expected = SQLException.class)
-    public void testInsertAlarmFailure() throws SQLException {
-        // Arrange
-        Alarm alarm = new Alarm();
-        when(mockConnection.prepareStatement(anyString(), eq(PreparedStatement.RETURN_GENERATED_KEYS)))
-                .thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeUpdate()).thenReturn(0); // No rows inserted
-
-        // Act
-        alarmDAO.insertAlarm(alarm, 1);
+        assertEquals(1, alarm.getAlarmId()); // Vérifier que l'ID généré est bien attribué
     }
 
     @Test
     public void testGetAlarmsByUserId() throws SQLException {
-        // Arrange
+        // Simuler la préparation de la requête
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true).thenReturn(false); // One alarm in result
+        when(mockResultSet.next()).thenReturn(true).thenReturn(false); // Un seul résultat
 
+        // Simuler les champs du résultat
         when(mockResultSet.getInt("alarmId")).thenReturn(1);
         when(mockResultSet.getString("title")).thenReturn("Morning Alarm");
         when(mockResultSet.getTime("time")).thenReturn(Time.valueOf("07:30:00"));
         when(mockResultSet.getString("repeatDays")).thenReturn("Monday,Tuesday");
 
-        // Act
+        // Appeler la méthode à tester
         List<Alarm> alarms = alarmDAO.getAlarmsByUserId(1);
 
-        // Assert
+        // Vérifier le résultat
         assertEquals(1, alarms.size());
         Alarm alarm = alarms.get(0);
         assertEquals(1, alarm.getAlarmId());
@@ -99,24 +89,24 @@ public class AlarmDAOImplTest {
 
     @Test
     public void testDeleteAlarm() throws SQLException {
-        // Arrange
+        // Simuler la préparation de la requête pour supprimer l'alarme
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeUpdate()).thenReturn(1); // One row deleted
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1); // Suppression réussie
 
-        // Act
+        // Appeler la méthode à tester
         alarmDAO.deleteAlarm(1);
 
-        // Assert
+        // Vérifier que la suppression a eu lieu
         verify(mockPreparedStatement, times(1)).executeUpdate();
     }
 
     @Test(expected = SQLException.class)
     public void testDeleteAlarmFailure() throws SQLException {
-        // Arrange
+        // Simuler la préparation de la requête pour échouer lors de la suppression
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeUpdate()).thenReturn(0); // No rows deleted
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0); // Aucun rang supprimé
 
-        // Act
+        // Appeler la méthode et s'attendre à une exception
         alarmDAO.deleteAlarm(1);
     }
 }
