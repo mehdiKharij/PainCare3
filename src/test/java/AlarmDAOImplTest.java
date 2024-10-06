@@ -23,7 +23,7 @@ public class AlarmDAOImplTest {
     public void test() {
         // Implement actual test logic here
         // Replace `someMethod` with the actual method you are testing
-        boolean result = alarmDAO.someMethod();  // Replace with actual method
+        boolean result = alarmDAO.getAlarmsByUserId();  // Replace with actual method
 
         // Assert the expected outcome
         assertTrue(result);  // Replace with the correct assertion
