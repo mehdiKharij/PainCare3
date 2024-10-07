@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,11 @@ public class AlarmDAOImplTest {
 
     @Test
     public void testInsertAlarm() throws SQLException {
+        // Define the alarm object and set up the mock behavior for inserting an alarm
+        Alarm alarm = new Alarm();
+        alarm.setTitle("Test Alarm");
+        alarm.setTime(Time.valueOf("12:00:00"));
+
         // Debugging: Check that mocks are properly set up
         assertNotNull(mockPreparedStatement);  // Ensure PreparedStatement is not null
         assertNotNull(mockResultSet);  // Ensure ResultSet is not null
@@ -56,13 +62,6 @@ public class AlarmDAOImplTest {
         System.out.println("PreparedStatement Mock: " + mockPreparedStatement);
         System.out.println("ResultSet Mock: " + mockResultSet);
         System.out.println("Connection Mock: " + mockConnection);
-
-        // Define the alarm object and set up the mock behavior for inserting an alarm
-        Alarm alarm = new Alarm();
-        alarm.setTitle("Test Alarm");
-
-        // Print debugging info before insert
-        System.out.println("Inserting Alarm with title: " + alarm.getTitle());
 
         // Execute the DAO method
         alarmDAO.insertAlarm(alarm, 1);
