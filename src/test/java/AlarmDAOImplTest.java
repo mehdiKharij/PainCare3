@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import com.JAVA.DAO.DAOFactory;
 import com.JAVA.DAO.AlarmDAOImpl;
-
+import com.JAVA.Beans.Alarm;
 public class AlarmDAOImplTest {
 
     private DAOFactory mockDAOFactory;
