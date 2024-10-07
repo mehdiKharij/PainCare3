@@ -60,9 +60,10 @@ public class DAOFactory {
     }
 
     /* Méthode chargée de fournir une connexion à la base de données */
-    Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
-    }
+   public Connection getConnection() throws SQLException {
+    return DriverManager.getConnection(url, username, password);
+}
+
 
     /*
      * Méthodes de récupération de l'implémentation des différents DAO (Freelancer
