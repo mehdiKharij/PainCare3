@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.JAVA.Beans.Alarm;  // Import the Alarm class
+import com.JAVA.Beans.Alarm;
 import com.JAVA.DAO.DAOFactory;
 import com.JAVA.DAO.AlarmDAOImpl;
 
