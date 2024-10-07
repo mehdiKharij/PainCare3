@@ -47,9 +47,22 @@ public class AlarmDAOImplTest {
 
     @Test
     public void testInsertAlarm() throws SQLException {
+        // Debugging: Check that mocks are properly set up
+        assertNotNull(mockPreparedStatement);  // Ensure PreparedStatement is not null
+        assertNotNull(mockResultSet);  // Ensure ResultSet is not null
+        assertNotNull(mockConnection);  // Ensure Connection is not null
+
+        // Print debugging info to verify mocks are working
+        System.out.println("PreparedStatement Mock: " + mockPreparedStatement);
+        System.out.println("ResultSet Mock: " + mockResultSet);
+        System.out.println("Connection Mock: " + mockConnection);
+
         // Define the alarm object and set up the mock behavior for inserting an alarm
         Alarm alarm = new Alarm();
         alarm.setTitle("Test Alarm");
+
+        // Print debugging info before insert
+        System.out.println("Inserting Alarm with title: " + alarm.getTitle());
 
         // Execute the DAO method
         alarmDAO.insertAlarm(alarm, 1);
