@@ -34,10 +34,12 @@ public class AlarmDAOImplTest {
 
         // Mock the prepared statement to be returned when prepareStatement is called
         when(mockConnection.prepareStatement(anyString(), anyInt())).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeUpdate()).thenReturn(1); // Mock successful insert
-        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getInt(1)).thenReturn(1);  // Mock returned key
+
+        // Mock executeUpdate and getGeneratedKeys behavior
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);  // Simulate successful insert
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);  // Mock ResultSet for generated keys
+        when(mockResultSet.next()).thenReturn(true);  // Simulate that a key is returned
+        when(mockResultSet.getInt(1)).thenReturn(1);  // Return the generated ID
 
         // Initialize the AlarmDAOImpl with the mocked DAOFactory
         alarmDAO = new AlarmDAOImpl(mockDAOFactory);
@@ -54,6 +56,8 @@ public class AlarmDAOImplTest {
 
         // Verify that the insert operation was called
         verify(mockPreparedStatement, times(1)).executeUpdate();
+
+        // Verify that the alarm ID was set correctly from the generated keys
         assertEquals(1, alarm.getAlarmId());  // Check if the ID is set correctly
     }
 }
