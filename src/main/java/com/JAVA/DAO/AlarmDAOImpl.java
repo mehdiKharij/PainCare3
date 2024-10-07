@@ -20,37 +20,41 @@ public class AlarmDAOImpl implements AlarmDAO {
     public AlarmDAOImpl(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
+ @Override
+public void insertAlarm(Alarm alarm, int userId) throws SQLException {
+    String sql = "INSERT INTO alarm (title, time, repeatDays, userId) VALUES (?, ?, ?, ?)";
 
-    @Override
-    public void insertAlarm(Alarm alarm, int userId) throws SQLException {
-        String sql = "INSERT INTO alarm (title, time, repeatDays, userId) VALUES (?, ?, ?, ?)";
+    try (Connection connection = daoFactory.getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
-        try (Connection connection = daoFactory.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        // Handle potential null values for title, time, and repeatDays
+        preparedStatement.setString(1, alarm.getTitle() != null ? alarm.getTitle() : "");
+        preparedStatement.setTime(2, alarm.getTime() != null ? alarm.getTime() : Time.valueOf("00:00:00"));
+        
+        // Handle null or empty repeatDays set
+        Set<String> repeatDays = alarm.getRepeatDays() != null ? alarm.getRepeatDays() : new HashSet<>();
+        preparedStatement.setString(3, String.join(",", repeatDays));
+        
+        preparedStatement.setInt(4, userId);
 
-            preparedStatement.setString(1, alarm.getTitle());
-            preparedStatement.setTime(2, alarm.getTime());
-            preparedStatement.setString(3, String.join(",", alarm.getRepeatDays()));
-            preparedStatement.setInt(4, userId);
+        int affectedRows = preparedStatement.executeUpdate();
 
-            int affectedRows = preparedStatement.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new SQLException("Creating alarm failed, no rows affected.");
-            }
-
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    alarm.setAlarmId(generatedKeys.getInt(1));
-                } else {
-                    throw new SQLException("Creating alarm failed, no ID obtained.");
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new SQLException("Error adding alarm", e);
+        if (affectedRows == 0) {
+            throw new SQLException("Creating alarm failed, no rows affected.");
         }
+
+        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                alarm.setAlarmId(generatedKeys.getInt(1));
+            } else {
+                throw new SQLException("Creating alarm failed, no ID obtained.");
+            }
+        }
+
+    } catch (SQLException e) {
+        throw new SQLException("Error adding alarm", e);
     }
+}
 
     @Override
     public List<Alarm> getAlarmsByUserId(int userId) throws SQLException {
