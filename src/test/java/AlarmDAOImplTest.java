@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,16 +53,7 @@ public class AlarmDAOImplTest {
         Alarm alarm = new Alarm();
         alarm.setTitle("Test Alarm");
         alarm.setTime(Time.valueOf("12:00:00"));
-
-        // Debugging: Check that mocks are properly set up
-        assertNotNull(mockPreparedStatement);  // Ensure PreparedStatement is not null
-        assertNotNull(mockResultSet);  // Ensure ResultSet is not null
-        assertNotNull(mockConnection);  // Ensure Connection is not null
-
-        // Print debugging info to verify mocks are working
-        System.out.println("PreparedStatement Mock: " + mockPreparedStatement);
-        System.out.println("ResultSet Mock: " + mockResultSet);
-        System.out.println("Connection Mock: " + mockConnection);
+        alarm.setRepeatDays(Set.of("Monday", "Tuesday"));  // Ensure this is non-null
 
         // Execute the DAO method
         alarmDAO.insertAlarm(alarm, 1);
