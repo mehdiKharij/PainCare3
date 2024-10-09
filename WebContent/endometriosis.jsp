@@ -23,7 +23,7 @@
     <meta charset="UTF-8">
     <title>Endometriosis Articlle</title>
     <meta charset="UTF-8">
-    <title>Evolution de la Douleur</title>
+    <title>Evolution de la Douleurs</title>
 	<!--  <script src="${pageContext.request.contextPath}/node_modules/chart.js/dist/Chart.min.js"></script> 
 	-->
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
