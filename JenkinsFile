@@ -4,7 +4,8 @@ pipeline {
         PATH = "C:\\WINDOWS\\SYSTEM32"
     }
     tools {
-        maven 'Maven'  // Ensure Maven is installed in Jenkins
+        maven 'Maven' // Ensure Maven is installed in Jenkins
+docker 'Docker'
     }
     stages {
        stage('Checkout') {
