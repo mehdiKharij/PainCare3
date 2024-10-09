@@ -3,14 +3,12 @@ pipeline {
     environment {
         // Ensure Docker and Maven paths are properly set
         PATH = "C:\\WINDOWS\\SYSTEM32;C:\\Program Files\\Docker\\Docker\\resources\\bin"
-        APP_PORT = "8090"  // Default application port
-        CONTAINER_PORT = "9090"  // Internal container port
     }
     tools {
-        maven 'Maven' // Ensure Maven is installed in Jenkins
+        maven 'Maven' // Ensure Mavenn is installed in Jenkins
     }
     stages {
-        stage('Checkout') {
+       stage('Checkout') {
             steps {
                 // Specify the branch 'master'
                 git branch: 'master', url: 'https://github.com/SihamOubalaout/PainCare3.git'
@@ -28,22 +26,6 @@ pipeline {
             steps {
                 script {
                     bat 'docker-compose up -d --build'  // Build and run MySQL and app containers
-                }
-            }
-        }
-
-        stage('Check Available Port') {
-            steps {
-                script {
-                    // Check if the port is in use
-                    def portCheck = bat(script: "netstat -aon | findstr :${APP_PORT}", returnStatus: true)
-                    if (portCheck == 0) {
-                        // If the port is in use, assign a new port
-                        APP_PORT = "9092"
-                        echo "Port 9091 is in use. Using port ${APP_PORT} instead."
-                    } else {
-                        echo "Port ${APP_PORT} is available."
-                    }
                 }
             }
         }
@@ -81,17 +63,17 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Run the Docker container, exposing dynamic port on the host
-                    docker.image('jee-app-tomcat').run("-p ${APP_PORT}:${CONTAINER_PORT}")
+                    // Run the Docker container, exposing port 8081 on the host
+                    docker.image('jee-app-tomcat').run('-p 9091:9090')
                 }
             }
         }
 
-        stage('Deploy') {
+       stage('Deploy') {
             steps {
                 script {
                     // Assign the custom URL inside a script block
-                    def customUrl = "http://localhost:${APP_PORT}/PainCare/acceuil.jsp"
+                    def customUrl = "http://localhost:8090/PainCare/acceuil.jsp"
                     echo "Deployment complete. Application should be running at ${customUrl}"
                 }
             }
@@ -102,12 +84,6 @@ pipeline {
         always {
             // Clean up the workspace after build
             cleanWs()
-
-            // Remove any dangling containers or networks
-            script {
-                bat 'docker container prune -f'
-                bat 'docker network prune -f'
-            }
         }
     }
 }
