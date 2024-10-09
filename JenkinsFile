@@ -4,7 +4,7 @@ pipeline {
         PATH = "C:\\WINDOWS\\SYSTEM32"
     }
     tools {
-        maven 'Maven' 
+        maven 'Maven'  // Ensure Maven is installed in Jenkins
     }
     stages {
         stage('Checkout') {
@@ -16,20 +16,20 @@ pipeline {
 
         stage('Build') {
             steps {
-                // Run Maven build on Windows
+                // Run Maven build to create the WAR file
                 bat 'mvn clean package'
             }
         }
 
         stage('Test') {
             steps {
-                // Run unit tests on Windows
+                // Run unit tests
                 bat 'mvn test'
             }
 
             post {
-                // Archive test results
                 always {
+                    // Archive the test results
                     junit '**/target/surefire-reports/*.xml'
                 }
             }
@@ -38,8 +38,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build a Docker image with the application jar file
-                    docker.build('paincare-app') // You can specify the image name here
+                    // Build the Docker image with the WAR file
+                    docker.build('jee-app-tomcat')
                 }
             }
         }
@@ -47,23 +47,22 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Run the Docker container, mapping necessary ports
-                    docker.image('paincare-app').run('-p 8080:8080') // Replace ports as needed
+                    // Run the Docker container, exposing port 8081 on the host
+                    docker.image('jee-app-tomcat').run('-p 8081:8080')
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying the application...'
-                // Define any additional deployment steps, if needed
+                echo 'Deployment complete. Application should be running at http://localhost:8081'
             }
         }
     }
 
     post {
         always {
-            // Clean up workspace
+            // Clean up the workspace after build
             cleanWs()
         }
     }

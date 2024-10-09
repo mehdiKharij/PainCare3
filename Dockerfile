@@ -5,7 +5,7 @@ FROM tomcat:9.0.62-jdk11-openjdk
 WORKDIR /usr/local/tomcat/webapps/
 
 # Copy the WAR file from the target directory to the Tomcat webapps directory
-COPY target/your-app-name.war ./ROOT.war
+COPY target/PainCare3-1.0-SNAPSHOT.jar ./ROOT.jar
 
 # Expose port 8080
 EXPOSE 8080
