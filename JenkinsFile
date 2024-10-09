@@ -71,7 +71,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Deployment complete. Application should be running at http://localhost:8081'
+               def customUrl = "http://localhost:8081/Accueil"
+                    echo "Deployment complete. Application should be running at ${customUrl}"
             }
         }
     }
