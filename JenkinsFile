@@ -5,10 +5,10 @@ pipeline {
         PATH = "C:\\WINDOWS\\SYSTEM32;C:\\Program Files\\Docker\\Docker\\resources\\bin"
     }
     tools {
-        maven 'Maven' // Ensure Mavenn is installed in Jenkins
+        maven 'Maven' // Ensure Maven is installed in Jenkins
     }
     stages {
-       stage('Checkout') {
+        stage('Checkout') {
             steps {
                 // Specify the branch 'master'
                 git branch: 'master', url: 'https://github.com/SihamOubalaout/PainCare3.git'
@@ -25,7 +25,14 @@ pipeline {
         stage('Build and Run Services') {
             steps {
                 script {
-                    bat 'docker-compose up -d --build'  // Build and run MySQL and app containers
+                    // Check if the container already exists
+                    def containerExists = bat(returnStatus: true, script: 'docker ps -a -q -f name=jee-app-tomcat')
+                    if (containerExists == 0) {
+                        echo "Container 'jee-app-tomcat' already exists, skipping creation."
+                    } else {
+                        echo "Creating and running the 'jee-app-tomcat' container."
+                        bat 'docker-compose up -d --build'  // Build and run MySQL and app containers
+                    }
                 }
             }
         }
@@ -38,7 +45,7 @@ pipeline {
             post {
                 always {
                     // Archive the test results
-                    junit '**/target/surefire-reports/*.xml'
+                    junit '/target/surefire-reports/*.xml'
                 }
             }
         }
@@ -54,8 +61,14 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image with the WAR file
-                    docker.build('jee-app-tomcat')
+                    // Check if Docker image exists
+                    def imageExists = bat(returnStatus: true, script: 'docker images -q jee-app-tomcat')
+                    if (imageExists == 0) {
+                        echo "Docker image 'jee-app-tomcat' already exists, skipping build."
+                    } else {
+                        echo "Building Docker image 'jee-app-tomcat'."
+                        docker.build('jee-app-tomcat')
+                    }
                 }
             }
         }
@@ -63,8 +76,14 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Run the Docker container, exposing port 8081 on the host
-                    docker.image('jee-app-tomcat').run('-p 9091:9090')
+                    // Check if the container is running
+                    def containerRunning = bat(returnStatus: true, script: 'docker ps -q -f name=jee-app-tomcat')
+                    if (containerRunning == 0) {
+                        echo "Container 'jee-app-tomcat' already running."
+                    } else {
+                        echo "Running Docker container 'jee-app-tomcat'."
+                        docker.image('jee-app-tomcat').run('-p 9091:9090')
+                    }
                 }
             }
         }
@@ -73,7 +92,7 @@ pipeline {
             steps {
                 script {
                     // Assign the custom URL inside a script block
-                    def customUrl = "http://localhost:8090/PainCare/acceuil.jsp"
+                    def customUrl = "http://localhost:8081/PainCare/acceuil.jsp"
                     echo "Deployment complete. Application should be running at ${customUrl}"
                 }
             }
