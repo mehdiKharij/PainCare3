@@ -1,6 +1,6 @@
 pipeline {
     agent any
-     environment {
+    environment {
         // Ensure Docker and Maven paths are properly set
         PATH = "C:\\WINDOWS\\SYSTEM32;C:\\Program Files\\Docker\\Docker\\resources\\bin"
     }
@@ -22,9 +22,16 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Build and Run Services') {
             steps {
-                // Run unit tests
+                script {
+                    bat 'docker-compose up -d --build'  // Build and run MySQL and app containers
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
                 bat 'mvn test'
             }
 
@@ -32,6 +39,14 @@ pipeline {
                 always {
                     // Archive the test results
                     junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Teardown') {
+            steps {
+                script {
+                    bat 'docker-compose down'  // Stop and remove containers
                 }
             }
         }
