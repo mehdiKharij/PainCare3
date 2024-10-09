@@ -5,7 +5,7 @@ pipeline {
         PATH = "C:\\WINDOWS\\SYSTEM32;C:\\Program Files\\Docker\\Docker\\resources\\bin"
     }
     tools {
-        maven 'Maven' // Ensure Maven is installed in Jenkins
+        maven 'Maven' // Ensure Mavenn is installed in Jenkins
     }
     stages {
        stage('Checkout') {
@@ -73,7 +73,7 @@ pipeline {
             steps {
                 script {
                     // Assign the custom URL inside a script block
-                    def customUrl = "http://localhost:8081/Accueil"
+                    def customUrl = "http://localhost:8080/PainCare/acceuil.jsp"
                     echo "Deployment complete. Application should be running at ${customUrl}"
                 }
             }
