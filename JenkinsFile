@@ -1,9 +1,9 @@
 pipeline {
     agent any
-environment {
+    environment {
         PATH = "C:\\WINDOWS\\SYSTEM32"
     }
-tools {
+    tools {
         maven 'Maven' 
     }
     stages {
@@ -35,17 +35,35 @@ tools {
             }
         }
 
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build a Docker image with the application jar file
+                    docker.build('paincare-app') // You can specify the image name here
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    // Run the Docker container, mapping necessary ports
+                    docker.image('paincare-app').run('-p 8080:8080') // Replace ports as needed
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
-                // This is optional, but if you want to deploy, define it here
                 echo 'Deploying the application...'
+                // Define any additional deployment steps, if needed
             }
         }
     }
 
     post {
         always {
-            // Clean up after build
+            // Clean up workspace
             cleanWs()
         }
     }
