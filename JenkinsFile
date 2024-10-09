@@ -73,7 +73,7 @@ pipeline {
             steps {
                 script {
                     // Assign the custom URL inside a script block
-                    def customUrl = "http://localhost:8080/PainCare/acceuil.jsp"
+                    def customUrl = "http://localhost:8090/PainCare/acceuil.jsp"
                     echo "Deployment complete. Application should be running at ${customUrl}"
                 }
             }
