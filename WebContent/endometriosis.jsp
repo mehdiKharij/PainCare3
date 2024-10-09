@@ -21,7 +21,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Endometriosis Articles</title>
+    <title>Endometriosis Article</title>
     <meta charset="UTF-8">
     <title>Evolution de la Douleur</title>
 	<!--  <script src="${pageContext.request.contextPath}/node_modules/chart.js/dist/Chart.min.js"></script> 
