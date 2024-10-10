@@ -31,7 +31,7 @@
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.15.0/font/bootstrap-icons.css">
        <link rel="icon" type="image" href="images/logoapp.png">
-    <!-- script ================================================== -->
+
     <script src="js/modernizr.js"></script>
     <style>
     .responsive-image {
