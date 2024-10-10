@@ -17,8 +17,7 @@
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
-    <!-- Style Sheet ================================================== -->
-    <link rel="stylesheet" type="text/css" href="styles.css">
+   
 
     <!-- Google Fonts ================================================== -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
