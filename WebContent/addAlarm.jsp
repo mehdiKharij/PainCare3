@@ -23,7 +23,7 @@
     <!-- Style Sheet ================================================== -->
     <link rel="stylesheet" type="text/css" href="styles.css">
 
-    <!-- Google Fonts ================================================== -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -102,7 +102,7 @@ button:hover {
                             <a class="nav-link text-uppercase  px-3" href="SuiviSymptomForm.jsp">Suivi</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-uppercase  px-3" href="blogServlet?action=view">Communauté</a>
+                            <a class="nav-link text-uppercase  px-3" href="blogServlet?action=view">CommunautÃ©</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-uppercase  px-3" href="calendrier.html">Calendrier</a>
@@ -197,7 +197,7 @@ button:hover {
             <div class="container">
                 <footer class="d-flex align-items-center pt-4 text-center">
                     <div class="col-md-6 mx-auto" style="margin-top: 100px;">
-                        <p>© 2024 PainCare - All rights reserved</p>
+                        <p>Â© 2024 PainCare - All rights reserved</p>
                     </div>
         
                 </footer>
